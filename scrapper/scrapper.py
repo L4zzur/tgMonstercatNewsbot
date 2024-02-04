@@ -44,6 +44,14 @@ class MonstercatNews:
             url = "https://" + url
         return url
 
+    def get_url_wo_https(self) -> str:
+        """Возвращает URL-адрес без https://.
+
+        Returns:
+            str: URL-адрес без https://.
+        """
+        return self.url.replace("https://", "")
+
     def is_valid_link(self) -> bool:
         """Проверяет, является ли URL-адрес ссылкой на monster.cat.
 
@@ -51,6 +59,18 @@ class MonstercatNews:
             bool: True, если URL-адрес является ссылкой на monster.cat, False - в противном случае.
         """
         return bool(re.match(r"https://monster\.cat/*", self.url))
+
+    def is_valid_date(self) -> bool:
+        """Проверяет, является ли дата релиза датой.
+
+        Returns:
+            bool: True, если дата релиза является датой, False - в противном случае.
+        """
+        try:
+            datetime.datetime.strptime(self.date, "%d.%m.%Y")
+            return True
+        except ValueError:
+            return False
 
     def get_html(self) -> str:
         """Загружает HTML-код страницы по URL-адресу self.url.
@@ -72,7 +92,7 @@ class MonstercatNews:
 
         if title is None:
             return None
-        return title.text.replace(" - ", " -- ")
+        return title.text.replace(" - ", " — ")
 
     def get_image_url(self) -> str | None:
         """Получает URL-адрес изображения из HTML-кода страницы.
@@ -98,7 +118,6 @@ class MonstercatNews:
         weekday = date.strftime("%A")
         day = int(day)
         month = date.strftime("%B")
-        month = self.morph.parse(month)[0].inflect({"gent"}).word  # type: ignore
 
         preposition = "В"
         if weekday == "вторник":
@@ -112,18 +131,21 @@ class MonstercatNews:
             "пятница": "Uncaged",
         }.get(weekday, "Unknown")
 
+        weekday = self.morph.parse(weekday)[0].inflect({"accs"}).word  # type: ignore
+        month = self.morph.parse(month)[0].inflect({"gent"}).word  # type: ignore
+
         return f"{preposition} {weekday}, {day} {month}, на {label}."
 
     def get_post_text(self) -> str:
         """Формирует текст новостного поста.
 
         Returns:
-            str: Текст поста в формате **Название релиза**\n\n*дата релиза и лейбл*\nСохранить заранее: *URL релиза*\n\n#News.
+            str: Текст поста в формате **Название релиза**\n\n*дата релиза и лейбл*\n\nСохранить заранее: *URL релиза*\n\n#News.
         """
         title = self.get_release_title()
         date = self.get_date_string()
 
-        post = f"**{title}**\n\n{date}\nСохранить заранее: {self.url}\n\n#News"
+        post = f"<b>{title}</b>\n\n{date}\n\nСохранить заранее: {self.get_url_wo_https()}\n\n#News"
         return post
 
     def __str__(self) -> str:
