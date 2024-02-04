@@ -1,12 +1,9 @@
-from aiogram import F, Router
-from aiogram.filters import Command
+from aiogram import Router
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import Message
 
 from config import config
 from filters import IsAdmin
-from keyboards import inline
 from scrapper import MonstercatNews
 from utils import states
 
@@ -33,7 +30,7 @@ async def create_post(
         await message.answer("Неправильно введена ссылка или дата")
         return
 
-    image_url = news.get_image_url()
+    image_url = str(news.get_image_url())
     text = news.get_post_text()
 
     await message.answer_photo(image_url, caption=text)
