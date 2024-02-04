@@ -32,7 +32,11 @@ async def create_post(
     if not message.text:
         await message.answer("Неправильно введена ссылка или дата")
         return
-    url, date = message.text.split()
+    try:
+        url, date = message.text.split()
+    except ValueError:
+        await message.answer("Неправильно введена ссылка или дата")
+        return
     try:
         news = MonstercatNews(url, date)
     except ValueError:
