@@ -3,6 +3,7 @@ import logging
 
 from aiogram import Bot, Dispatcher
 from aiogram.enums.parse_mode import ParseMode
+from aiogram.types import BotCommand
 
 from callbacks import setup_callback_routers
 from config import config
@@ -24,6 +25,11 @@ async def main() -> None:
     dp.include_router(callback_routers)
 
     await bot.delete_webhook(True)
+    await bot.set_my_commands(
+        [
+            BotCommand(command="start", description="Начать работу"),
+        ]
+    )
     await dp.start_polling(bot)
 
 
