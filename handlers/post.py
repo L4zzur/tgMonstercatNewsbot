@@ -13,16 +13,6 @@ from utils import states
 router = Router()
 
 
-@router.callback_query(F.data == "new_post", IsAdmin(config.ADMIN_IDS))
-async def new_post(callback: CallbackQuery, state: FSMContext) -> None:
-    await callback.message.edit_text(  # type: ignore
-        "Прикрепите presave ссылку на релиз и дату выхода через пробел.\nНапример: monster.cat/sorcererssymphony 7.02.2024",
-        disable_web_page_preview=True,
-    )
-
-    await state.set_state(states.Post.new_post)
-
-
 @router.message(states.Post.new_post, IsAdmin(config.ADMIN_IDS))
 async def create_post(
     message: Message,
