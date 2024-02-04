@@ -115,9 +115,9 @@ class MonstercatNews:
         """
         day, month, year = self.date.split(".")
         date = datetime.date(int(year), int(month), int(day))
-        weekday = date.strftime("%A")
+        weekday = date.strftime("%A").lower()
         day = int(day)
-        month = date.strftime("%B")
+        month = date.strftime("%B").lower()
 
         preposition = "В"
         if weekday == "вторник":
