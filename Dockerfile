@@ -2,7 +2,7 @@ FROM python:3.11-alpine AS builder
 
 WORKDIR /tmp
 
-RUN pip install poetry
+RUN pip install uv
 COPY ./pyproject.toml ./uv.lock* ./
 RUN uv export --format requirements-txt
 
