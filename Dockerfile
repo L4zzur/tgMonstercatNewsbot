@@ -4,7 +4,7 @@ WORKDIR /tmp
 
 RUN pip install uv
 COPY ./pyproject.toml ./uv.lock* ./
-RUN uv export --format requirements-txt
+RUN uv export --format requirements-txt --no-hashes --no-dev -o ./requirements.txt
 
 
 FROM python:3.11-alpine
