@@ -2,11 +2,9 @@ FROM python:3.11-alpine AS builder
 
 WORKDIR /tmp
 
-COPY pyproject.toml poetry.lock ./
-
 RUN pip install poetry
-COPY ./pyproject.toml ./poetry.lock* ./
-RUN poetry export -f requirements.txt --output requirements.txt --without-hashes
+COPY ./pyproject.toml ./uv.lock* ./
+RUN uv export --format requirements-txt
 
 
 FROM python:3.11-alpine
