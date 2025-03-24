@@ -25,9 +25,9 @@ ENV LANG ru_RU.UTF-8
 ENV LANGUAGE ru_RU.UTF-8
 ENV LC_ALL ru_RU.UTF-8
 
-COPY --from=builder /tmp/requirements.txt requirements.txt
+COPY --from=builder /tmp/requirements.txt ./requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 COPY . .
 
